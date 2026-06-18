@@ -1,0 +1,285 @@
+// ============================================================
+// Prisma Schema — EcoSphere AI
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---- User ----
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  name               String
+  image              String?
+  passwordHash       String?
+  provider           String    @default("email") // email | google | github
+  emailVerified      DateTime?
+  onboardingComplete Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  profile            Profile?
+  carbonEntries      CarbonEntry[]
+  userAchievements   UserAchievement[]
+  challengeParticipations ChallengeParticipation[]
+  reports            Report[]
+  aiConversations    AIConversation[]
+  activityLogs       ActivityLog[]
+  lessonCompletions  LessonCompletion[]
+  groupMemberships   GroupMembership[]
+
+  accounts           Account[]
+  sessions           Session[]
+}
+
+// ---- NextAuth Models ----
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---- Profile ----
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  transportMode   String   @default("mixed")
+  dailyCommute    Float    @default(0)
+  dietType        String   @default("omnivore")
+  mealPrep        String   @default("mixed")
+  energySource    String   @default("grid")
+  housingType     String   @default("apartment")
+  householdSize   Int      @default(1)
+  shoppingHabits  String   @default("moderate")
+  wasteRecycling  Boolean  @default(false)
+  wasteComposting Boolean  @default(false)
+
+  // Gamification
+  xp              Int      @default(0)
+  level           Int      @default(1)
+  greenCoins      Int      @default(0)
+  streak          Int      @default(0)
+  longestStreak   Int      @default(0)
+  lastActiveDate  DateTime?
+  carbonScore     Int      @default(50)
+
+  // Goals
+  weeklyGoal      Float    @default(50.0)   // kg CO₂e target
+  monthlyGoal     Float    @default(200.0)
+
+  // Privacy
+  dataSharing       Boolean @default(false)
+  communityVisibility String @default("public")
+  aiHistoryRetention Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---- Carbon Entry ----
+model CarbonEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  date        DateTime @default(now())
+  category    String   // transportation | food | energy | shopping | waste | travel | appliances | lifestyle
+  subcategory String
+  factorId    String?  // Reference to emission factor
+  value       Float    // Amount in the factor's unit
+  unit        String
+  emissionKg  Float    // Calculated kg CO₂e
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([userId, category])
+}
+
+// ---- Challenge ----
+model Challenge {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  type        String   @default("daily") // daily | weekly | seasonal
+  difficulty  String   @default("easy")  // easy | medium | hard | expert
+  xpReward    Int      @default(25)
+  coinReward  Int      @default(5)
+  targetValue Float    @default(1)
+  unit        String   @default("times")
+  icon        String   @default("🌱")
+  startDate   DateTime?
+  endDate     DateTime?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  participations ChallengeParticipation[]
+}
+
+model ChallengeParticipation {
+  id          String    @id @default(cuid())
+  userId      String
+  challengeId String
+  progress    Float     @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  joinedAt    DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, challengeId])
+  @@index([userId])
+}
+
+// ---- Achievement ----
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  achievementId String   // References badge ID from constants
+  unlockedAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+// ---- Community ----
+model CommunityGroup {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  type        String   @default("custom") // campus | city | custom
+  image       String?
+  createdBy   String
+  createdAt   DateTime @default(now())
+
+  members GroupMembership[]
+}
+
+model GroupMembership {
+  id       String   @id @default(cuid())
+  userId   String
+  groupId  String
+  role     String   @default("member") // admin | moderator | member
+  joinedAt DateTime @default(now())
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group CommunityGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+}
+
+// ---- Lesson ----
+model Lesson {
+  id               String   @id @default(cuid())
+  title            String
+  description      String
+  content          String   // Markdown content
+  category         String   // climate | energy | waste | sustainable-living | food
+  difficulty       String   @default("beginner") // beginner | intermediate | advanced
+  estimatedMinutes Int      @default(5)
+  xpReward         Int      @default(30)
+  order            Int      @default(0)
+  published        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  completions LessonCompletion[]
+}
+
+model LessonCompletion {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+// ---- AI Conversation ----
+model AIConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // coach | scanner | meal | travel | shopping
+  messages  String   @default("[]") // JSON array of messages
+  context   String?  // Additional context
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+// ---- Report ----
+model Report {
+  id             String   @id @default(cuid())
+  userId         String
+  type           String   // weekly | monthly
+  period         String   // e.g., "2025-W03" or "2025-01"
+  totalEmissions Float
+  reduction      Float    @default(0) // percentage reduction
+  data           String   @default("{}") // JSON data
+  generatedAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@unique([userId, type, period])
+}
+
+// ---- Activity Log ----
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String   // login | carbon_entry | challenge_complete | badge_unlock | etc.
+  details   String?  // JSON details
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
