@@ -142,3 +142,26 @@ export function calculateEmission(factorId: string, value: number): number {
   if (!factor) return 0;
   return +(factor.factor * value).toFixed(3);
 }
+
+// ---- Legacy Mapping for Calculator Page & Logic ----
+export const EMISSION_FACTORS = {
+  transport: {
+    car_gas: 0.35, // kg CO2e per mile
+    car_ev: 0.1,
+    public: 0.15,
+    flight_short: 0.25,
+  },
+  diet: {
+    meat_heavy: 2500, // kg CO2e per year
+    average: 1500,
+    pescatarian: 1200,
+    vegetarian: 1000,
+    vegan: 700,
+  },
+  energy: {
+    grid_standard: 0.4, // kg CO2e per kWh
+    grid_green: 0.05,
+    solar: 0.02,
+    mixed_renewable: 0.15,
+  }
+};
