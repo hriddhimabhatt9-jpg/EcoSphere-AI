@@ -17,14 +17,12 @@ export function Badge({
     <span
       className={cn(
         "badge",
-        {
-          "badge-green": variant === "green",
-          "badge-blue": variant === "blue",
-          "badge-amber": variant === "amber",
-          "badge-rose": variant === "rose",
-          "badge-purple": variant === "purple",
-          "bg-tertiary text-secondary": variant === "default",
-        },
+        variant === "green" && "badge-green",
+        variant === "blue" && "badge-blue",
+        variant === "amber" && "badge-amber",
+        variant === "rose" && "badge-rose",
+        variant === "purple" && "badge-purple",
+        variant === "default" && "bg-tertiary text-secondary",
         className
       )}
       {...props}
