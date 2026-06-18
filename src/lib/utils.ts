@@ -2,11 +2,26 @@
 // EcoSphere AI — Shared Utility Functions
 // ============================================================
 
+export type ClassValue = string | number | boolean | undefined | null | { [key: string]: any } | ClassValue[];
+
 /**
- * Combine CSS class names, filtering out falsy values
+ * Combine CSS class names, supporting strings, booleans, and objects
  */
-export function cn(...classes: (string | boolean | undefined | null)[]): string {
-  return classes.filter(Boolean).join(" ");
+export function cn(...classes: ClassValue[]): string {
+  const result: string[] = [];
+  for (const item of classes) {
+    if (!item) continue;
+    if (typeof item === 'string' || typeof item === 'number') {
+      result.push(item.toString());
+    } else if (Array.isArray(item)) {
+      result.push(cn(...item));
+    } else if (typeof item === 'object') {
+      for (const key in item) {
+        if (item[key]) result.push(key);
+      }
+    }
+  }
+  return result.join(" ");
 }
 
 /**
