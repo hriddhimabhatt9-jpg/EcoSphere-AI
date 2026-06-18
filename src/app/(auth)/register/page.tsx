@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -56,7 +57,7 @@ export default function RegisterPage() {
   };
 
   const handleOAuthLogin = (provider: "google" | "github") => {
-    window.location.href = `/api/auth/signin/${provider}`;
+    signIn(provider, { callbackUrl: "/dashboard" });
   };
 
   return (

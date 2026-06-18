@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -40,10 +41,7 @@ export default function LoginPage() {
   };
 
   const handleOAuthLogin = (provider: "google" | "github") => {
-    // Note: Since signIn from next-auth is a client component inside a server action,
-    // we use a form action or the standard next-auth react signIn function.
-    // However, to keep it simple, we redirect to the api route or use the next-auth package.
-    window.location.href = `/api/auth/signin/${provider}`;
+    signIn(provider, { callbackUrl: "/dashboard" });
   };
 
   return (

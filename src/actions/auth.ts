@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { signIn } from "@/lib/auth";
 import { AuthError } from "next-auth";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -65,6 +66,12 @@ export async function loginUser(formData: FormData) {
     
     return { success: true };
   } catch (error) {
+    // Next.js server actions throw NEXT_REDIRECT errors for redirects.
+    // These are NOT real errors — they must be re-thrown so Next.js handles them.
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -73,6 +80,8 @@ export async function loginUser(formData: FormData) {
           return { error: "Something went wrong. Please try again." };
       }
     }
-    throw error;
+
+    console.error("Login error:", error);
+    return { error: "Something went wrong. Please try again." };
   }
 }
