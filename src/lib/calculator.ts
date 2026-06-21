@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @module calculator
  * @description EcoSphere AI — Carbon Emission Calculation Engine.

@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @module emissions
  * @description EcoSphere AI — Carbon Emission Factors Database.

@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @module badges
  * @description EcoSphere AI — Gamification Constants.

@@ -37,9 +37,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         disabled={isLoading || props.disabled}
+        aria-busy={isLoading || undefined}
+        aria-disabled={isLoading || props.disabled || undefined}
         {...props}
       >
-        {isLoading && <span className="spinner" style={{ width: 16, height: 16, marginRight: size === "icon" ? 0 : 8 }} />}
+        {isLoading && <span className="spinner" aria-hidden="true" style={{ width: 16, height: 16, marginRight: size === "icon" ? 0 : 8 }} />}
         {!isLoading && size === "icon" ? children : isLoading && size === "icon" ? null : children}
       </button>
     );

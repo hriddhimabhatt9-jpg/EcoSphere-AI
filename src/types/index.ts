@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @module types
  * @description EcoSphere AI — TypeScript Type Definitions.

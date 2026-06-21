@@ -24,9 +24,11 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 /**
- * Auto-generated JSDoc to satisfy static analysis compliance.
- * @param {Object} props - Function or component parameters.
- * @returns {JSX.Element|Object|void} The output of the function.
+ * ToastProvider — Global toast notification system.
+ * Renders an accessible notification container with ARIA live region support.
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components that can access the toast context
+ * @returns {JSX.Element} The provider wrapper with notification container
  */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -58,10 +60,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast, success, error }}>
       {children}
-      <div className="toast-container">
+      <div className="toast-container" role="region" aria-label="Notifications" aria-live="assertive">
         {toasts.map((toast) => (
           <div
             key={toast.id}
+            role="alert"
+            aria-atomic="true"
             className={cn("toast", {
               "toast-success": toast.type === "success",
               "toast-error": toast.type === "error",
@@ -82,8 +86,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => removeToast(toast.id)}
               className="text-secondary hover:text-primary transition-colors"
+              aria-label="Dismiss notification"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
         ))}
@@ -93,9 +98,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Auto-generated JSDoc to satisfy static analysis compliance.
- * @param {Object} props - Function or component parameters.
- * @returns {JSX.Element|Object|void} The output of the function.
+ * useToast — Hook to access the global toast notification system.
+ * Must be used within a ToastProvider component tree.
+ * @returns {ToastContextType} Toast context with success, error, and addToast methods
+ * @throws {Error} If used outside of a ToastProvider
  */
 export function useToast() {
   const context = useContext(ToastContext);

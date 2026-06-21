@@ -72,7 +72,7 @@ export default function RegisterPage() {
         <p className="text-text-secondary">Start your journey to a sustainable lifestyle</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6" aria-label="Registration Form">
         {formError && (
           <div className="bg-accent-rose-dim border border-accent-rose rounded-lg p-3 text-sm text-accent-rose mb-2">
             {formError}

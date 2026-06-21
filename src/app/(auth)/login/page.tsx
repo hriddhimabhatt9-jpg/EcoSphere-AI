@@ -63,7 +63,7 @@ export default function LoginPage() {
         <p className="text-text-secondary">Enter your credentials to access your account</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6" aria-label="Login Form">
         {formError && (
           <div className="bg-accent-rose-dim border border-accent-rose rounded-lg p-3 text-sm text-accent-rose mb-2">
             {formError}

@@ -1,4 +1,3 @@
-"use strict";
 import React from "react";
 import { ToastProvider } from "@/components/ui/Toast";
 

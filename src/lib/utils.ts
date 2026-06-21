@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @module utils
  * @description EcoSphere AI — Shared Utility Functions.

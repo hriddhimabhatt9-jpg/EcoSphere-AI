@@ -1,4 +1,3 @@
-"use strict";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +15,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, helperText, id, ...props }, ref) => {
     const inputId = id || React.useId();
+    const errorId = `${inputId}-error`;
 
     return (
       <div className="input-group">
@@ -29,10 +29,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn("input", { "input-error": !!error }, className)}
           aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           {...props}
         />
         {(error || helperText) && (
-          <span className={cn("text-xs", error ? "error-text" : "text-muted")}>
+          <span 
+            id={error ? errorId : undefined}
+            className={cn("text-xs", error ? "error-text" : "text-muted")}
+            role={error ? "alert" : undefined}
+          >
             {error || helperText}
           </span>
         )}

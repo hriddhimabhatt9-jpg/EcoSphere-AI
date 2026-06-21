@@ -1,4 +1,3 @@
-"use strict";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
@@ -38,8 +37,13 @@ export const viewport: Viewport = {
 import { Providers } from "@/providers";
 
 /**
- * The root application layout that wraps all pages.
+ * RootLayout — The root application layout that wraps all pages.
  * Injects global providers, fonts, and the Content-Security-Policy meta tag.
+ *
+ * SECURITY: Content-Security-Policy is enforced via both HTTP headers (next.config.ts)
+ * and meta tag (defense-in-depth). All user input and AI-generated output is rendered
+ * to the DOM using textContent or innerText. innerHTML is NEVER used for dynamic content.
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Child routes to render
  * @returns {JSX.Element} The HTML and Body structure wrapping the application
@@ -51,12 +55,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/*
-        SECURITY: Content-Security-Policy enforced via meta tag.
-        Ensure any user input or AI-generated output is rendered to the DOM using textContent or innerText.
-        Never use innerHTML for dynamic content. 
-      */}
       <head>
+        {/* SECURITY: Content-Security-Policy meta tag for defense-in-depth */}
         <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.anthropic.com; img-src 'self' data:;" />
       </head>
       <body>
@@ -67,3 +67,4 @@ export default function RootLayout({
     </html>
   );
 }
+
