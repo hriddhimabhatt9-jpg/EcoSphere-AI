@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "echo \"Linting complete\" && exit 0",
-    "test": "echo 'All tests passed successfully' && exit 0",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "postinstall": "prisma generate",
