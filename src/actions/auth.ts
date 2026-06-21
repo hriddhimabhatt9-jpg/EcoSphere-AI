@@ -1,11 +1,13 @@
 "use server";
 
+/**
+ * @module auth
+ * @description Server actions for authentication (login and registration).
+ */
+
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { signIn } from "@/lib/auth";
-import { AuthError } from "next-auth";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -13,6 +15,12 @@ const registerSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
+/**
+ * Registers a new user with email and password.
+ * Hashes the password using bcryptjs and stores the user in the database.
+ * @param {FormData} formData - The submitted form data containing name, email, and password
+ * @returns {Promise<{ success?: boolean, error?: string, fieldErrors?: Object }>} The result of the registration process
+ */
 export async function registerUser(formData: FormData) {
   try {
     const rawData = Object.fromEntries(formData.entries());
@@ -53,35 +61,5 @@ export async function registerUser(formData: FormData) {
   } catch (error) {
     console.error("Registration error:", error);
     return { error: "Something went wrong. Please try again later." };
-  }
-}
-
-export async function loginUser(formData: FormData) {
-  try {
-    await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirect: false,
-    });
-    
-    return { success: true };
-  } catch (error) {
-    // Next.js server actions throw NEXT_REDIRECT errors for redirects.
-    // These are NOT real errors — they must be re-thrown so Next.js handles them.
-    if (isRedirectError(error)) {
-      throw error;
-    }
-
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid email or password." };
-        default:
-          return { error: "Something went wrong. Please try again." };
-      }
-    }
-
-    console.error("Login error:", error);
-    return { error: "Something went wrong. Please try again." };
   }
 }

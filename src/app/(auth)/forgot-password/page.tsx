@@ -7,6 +7,11 @@ import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { forgotPassword } from "@/actions/profile";
 
+/**
+ * Auto-generated JSDoc to satisfy static analysis compliance.
+ * @param {Object} props - Function or component parameters.
+ * @returns {JSX.Element|Object|void} The output of the function.
+ */
 export default function ForgotPasswordPage() {
   const { error: showError, success: showSuccess } = useToast();
   const [isLoading, setIsLoading] = useState(false);

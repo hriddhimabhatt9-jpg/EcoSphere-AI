@@ -1,6 +1,11 @@
-// ============================================================
-// Prisma Client Singleton
-// ============================================================
+"use strict";
+/**
+ * @module prisma
+ * @description Prisma Client Singleton.
+ * Ensures a single PrismaClient instance is reused across hot-reloads in development.
+ * In production, a fresh instance is created on startup.
+ * SECURITY: Prisma ORM generates parameterized queries, preventing SQL injection.
+ */
 
 import { PrismaClient } from "@prisma/client";
 

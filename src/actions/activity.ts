@@ -1,5 +1,10 @@
 "use server";
 
+/**
+ * @module activity
+ * @description Server actions for logging user eco-activities.
+ */
+
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -12,6 +17,12 @@ const logActivitySchema = z.object({
   impactAmount: z.coerce.number(), // Amount of CO2e saved or generated
 });
 
+/**
+ * Logs a new user activity and calculates XP earned.
+ * Runs in a transaction to update both the activity log and the user's profile level.
+ * @param {FormData} formData - The submitted form data containing title, category, description, and impactAmount
+ * @returns {Promise<{ success?: boolean, error?: string, fieldErrors?: Object, xpEarned?: number }>} The result of the activity logging operation
+ */
 export async function logActivity(formData: FormData) {
   try {
     const session = await auth();

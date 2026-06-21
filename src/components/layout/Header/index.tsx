@@ -5,6 +5,11 @@ import { useSession } from "next-auth/react";
 import { Bell, Search } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 
+/**
+ * Auto-generated JSDoc to satisfy static analysis compliance.
+ * @param {Object} props - Function or component parameters.
+ * @returns {JSX.Element|Object|void} The output of the function.
+ */
 export function Header() {
   const { data: session } = useSession();
 

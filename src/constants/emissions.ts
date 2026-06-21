@@ -1,9 +1,22 @@
-// ============================================================
-// EcoSphere AI — Carbon Emission Factors Database
-// All values in kg CO₂e per unit
-// Sources: EPA, DEFRA, IPCC emission factor databases
-// ============================================================
+"use strict";
+/**
+ * @module emissions
+ * @description EcoSphere AI — Carbon Emission Factors Database.
+ * All values in kg CO₂e per unit. Sources: EPA, DEFRA, IPCC emission factor databases.
+ * Provides deterministic mathematical compliance for carbon footprint calculations.
+ */
 
+/**
+ * Represents a single emission factor entry with metadata.
+ * @interface EmissionFactor
+ * @property {string} id - Unique identifier for the emission factor
+ * @property {string} category - Top-level category (e.g., "transportation", "food")
+ * @property {string} subcategory - Specific subcategory within the category
+ * @property {string} label - Human-readable display label
+ * @property {number} factor - Emission factor value in kg CO₂e per unit
+ * @property {string} unit - The measurement unit (e.g., "km", "kg", "kWh")
+ * @property {string} [description] - Optional description with additional context
+ */
 export interface EmissionFactor {
   id: string;
   category: string;
@@ -121,21 +134,31 @@ export const ALL_EMISSION_FACTORS: EmissionFactor[] = [
 ];
 
 /**
- * Get emission factor by ID
+ * Retrieves a specific emission factor by its unique identifier.
+ * Searches across all emission factor categories.
+ * @param {string} id - The unique emission factor identifier (e.g., "car_petrol", "beef")
+ * @returns {EmissionFactor | undefined} The matching emission factor, or undefined if not found
  */
 export function getEmissionFactor(id: string): EmissionFactor | undefined {
   return ALL_EMISSION_FACTORS.find((f) => f.id === id);
 }
 
 /**
- * Get all factors for a category
+ * Retrieves all emission factors belonging to a specific category.
+ * @param {string} category - The category to filter by (e.g., "transportation", "food", "energy")
+ * @returns {EmissionFactor[]} Array of emission factors in the specified category
  */
 export function getFactorsByCategory(category: string): EmissionFactor[] {
   return ALL_EMISSION_FACTORS.filter((f) => f.category === category);
 }
 
 /**
- * Calculate emissions from a factor ID and value
+ * Calculates the carbon emission for a given activity using the emission factor database.
+ * Looks up the factor by ID and multiplies by the provided value.
+ * Returns 0 if the factor ID is not found.
+ * @param {string} factorId - The emission factor identifier to look up
+ * @param {number} value - The quantity to multiply by the emission factor
+ * @returns {number} The calculated emission in kg CO₂e, rounded to 3 decimal places
  */
 export function calculateEmission(factorId: string, value: number): number {
   const factor = getEmissionFactor(factorId);

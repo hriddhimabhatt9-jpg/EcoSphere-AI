@@ -1,6 +1,10 @@
-// ============================================================
-// EcoSphere AI — Gamification Constants
-// ============================================================
+"use strict";
+/**
+ * @module badges
+ * @description EcoSphere AI — Gamification Constants.
+ * Defines the 20-level progression system, 25+ achievement badges across 4 tiers,
+ * XP reward values, Green Coin economy, and tier color mappings.
+ */
 
 import type { LevelInfo, Achievement } from "@/types";
 
@@ -29,7 +33,10 @@ export const LEVELS: LevelInfo[] = [
 ];
 
 /**
- * Get level info from XP
+ * Determines the current level information based on accumulated XP.
+ * Traverses the level table from highest to lowest to find the matching tier.
+ * @param {number} xp - The user's current total experience points
+ * @returns {LevelInfo} The level information object containing level number, title, and XP thresholds
  */
 export function getLevelFromXP(xp: number): LevelInfo {
   for (let i = LEVELS.length - 1; i >= 0; i--) {
@@ -39,7 +46,10 @@ export function getLevelFromXP(xp: number): LevelInfo {
 }
 
 /**
- * Get XP progress percentage to next level
+ * Calculates the percentage progress toward the next level.
+ * Returns 100 for users at the maximum level (EcoSphere Legend).
+ * @param {number} xp - The user's current total experience points
+ * @returns {number} Progress percentage from 0 to 100
  */
 export function getXPProgress(xp: number): number {
   const level = getLevelFromXP(xp);
@@ -49,7 +59,10 @@ export function getXPProgress(xp: number): number {
 }
 
 /**
- * Get XP needed for next level
+ * Calculates the remaining XP needed to reach the next level.
+ * Returns 0 for users at the maximum level.
+ * @param {number} xp - The user's current total experience points
+ * @returns {number} The number of XP points needed for the next level
  */
 export function getXPToNextLevel(xp: number): number {
   const level = getLevelFromXP(xp);
@@ -101,14 +114,18 @@ export const BADGES: Achievement[] = [
 ];
 
 /**
- * Get badge by ID
+ * Retrieves a specific achievement/badge definition by its unique identifier.
+ * @param {string} id - The badge identifier (e.g., "first_calc", "streak_30")
+ * @returns {Achievement | undefined} The matching achievement, or undefined if not found
  */
 export function getBadge(id: string): Achievement | undefined {
   return BADGES.find((b) => b.id === id);
 }
 
 /**
- * Get badges by tier
+ * Retrieves all achievements/badges belonging to a specific tier.
+ * @param {string} tier - The tier to filter by ("bronze", "silver", "gold", or "platinum")
+ * @returns {Achievement[]} Array of achievements in the specified tier
  */
 export function getBadgesByTier(tier: string): Achievement[] {
   return BADGES.filter((b) => b.tier === tier);

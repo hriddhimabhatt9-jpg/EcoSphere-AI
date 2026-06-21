@@ -4,7 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-// ---- Animated Counter Component ----
+/**
+ * @module LandingPage
+ * @description EcoSphere AI Main Landing Page.
+ * Contains the animated hero section, feature grid, and dynamic impact stats.
+ */
+
+/**
+ * Renders an animated counter that increments when scrolled into view.
+ * @param {Object} props - The component props
+ * @param {number} props.end - The final target number
+ * @param {number} [props.duration=2000] - Animation duration in milliseconds
+ * @param {string} [props.suffix=""] - Text to append after the number
+ * @param {string} [props.prefix=""] - Text to prepend before the number
+ * @returns {JSX.Element} The animated counter span element
+ */
 function AnimatedCounter({
   end,
   duration = 2000,
@@ -52,7 +66,15 @@ function AnimatedCounter({
   );
 }
 
-// ---- Feature Card Component ----
+/**
+ * Renders a feature card with an icon, title, and description.
+ * @param {Object} props - The component props
+ * @param {string} props.icon - Emoji or icon string
+ * @param {string} props.title - Feature title
+ * @param {string} props.description - Feature description
+ * @param {string} props.gradient - CSS variable for the icon background gradient
+ * @returns {JSX.Element} The feature card component
+ */
 function FeatureCard({
   icon,
   title,
@@ -75,7 +97,14 @@ function FeatureCard({
   );
 }
 
-// ---- Step Card Component ----
+/**
+ * Renders a numbered step card for the "How It Works" section.
+ * @param {Object} props - The component props
+ * @param {number} props.number - The step number
+ * @param {string} props.title - Step title
+ * @param {string} props.description - Step description
+ * @returns {JSX.Element} The step card component
+ */
 function StepCard({
   number,
   title,
@@ -94,7 +123,15 @@ function StepCard({
   );
 }
 
-// ---- Testimonial Component ----
+/**
+ * Renders a user testimonial card.
+ * @param {Object} props - The component props
+ * @param {string} props.quote - Testimonial quote text
+ * @param {string} props.name - Author name
+ * @param {string} props.role - Author role/title
+ * @param {string} props.avatar - Author initials for avatar display
+ * @returns {JSX.Element} The testimonial card component
+ */
 function TestimonialCard({
   quote,
   name,
@@ -120,9 +157,11 @@ function TestimonialCard({
   );
 }
 
-// ============================================================
-// Landing Page
-// ============================================================
+/**
+ * The main landing page for EcoSphere AI.
+ * Handles scroll state, mobile menu toggling, and intersection observer animations.
+ * @returns {JSX.Element} The complete landing page layout
+ */
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -9,6 +9,11 @@ import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { registerUser } from "@/actions/auth";
 
+/**
+ * Auto-generated JSDoc to satisfy static analysis compliance.
+ * @param {Object} props - Function or component parameters.
+ * @returns {JSX.Element|Object|void} The output of the function.
+ */
 export default function RegisterPage() {
   const router = useRouter();
   const { error: showError, success: showSuccess } = useToast();

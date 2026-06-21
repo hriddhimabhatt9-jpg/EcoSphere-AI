@@ -1,3 +1,4 @@
+"use strict";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +8,11 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   helperText?: string;
 }
 
+/**
+ * Input component with optional label and error states.
+ * @param {InputProps} props - The input properties including label, error, and helperText.
+ * @returns {JSX.Element} The rendered input element.
+ */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, helperText, id, ...props }, ref) => {
     const inputId = id || React.useId();

@@ -1,6 +1,10 @@
-// ============================================================
-// EcoSphere AI — TypeScript Type Definitions
-// ============================================================
+"use strict";
+/**
+ * @module types
+ * @description EcoSphere AI — TypeScript Type Definitions.
+ * Defines 30+ interfaces covering the complete application domain:
+ * user profiles, carbon tracking, gamification, AI features, community, and analytics.
+ */
 
 // ---- User & Auth ----
 export interface User {

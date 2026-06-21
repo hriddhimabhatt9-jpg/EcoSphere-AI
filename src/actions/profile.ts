@@ -1,5 +1,10 @@
 "use server";
 
+/**
+ * @module profile
+ * @description Server actions for user profile management and onboarding.
+ */
+
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -17,6 +22,12 @@ const profileSchema = z.object({
   wasteComposting: z.coerce.boolean(),
 });
 
+/**
+ * Processes the user onboarding wizard submission.
+ * Saves profile data and calculates an initial baseline carbon score.
+ * @param {FormData} formData - The submitted form data containing onboarding responses
+ * @returns {Promise<{ success?: boolean, error?: string, fieldErrors?: Object }>} The result of the onboarding process
+ */
 export async function completeOnboarding(formData: FormData) {
   try {
     const session = await auth();
@@ -85,6 +96,12 @@ export async function completeOnboarding(formData: FormData) {
   }
 }
 
+/**
+ * Initiates the password recovery process.
+ * Always returns success to prevent email enumeration attacks.
+ * @param {string} email - The user's email address
+ * @returns {Promise<{ success?: boolean, error?: string }>} The result of the request
+ */
 export async function forgotPassword(email: string) {
   try {
     // In a real application, you would generate a token and send an email here.

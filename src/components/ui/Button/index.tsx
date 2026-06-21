@@ -10,6 +10,11 @@ export interface ButtonProps
   isLoading?: boolean;
 }
 
+/**
+ * Button component with variant and size options.
+ * @param {ButtonProps} props - The button properties including variant, size, and isLoading.
+ * @returns {JSX.Element} The rendered button element.
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { className, variant = "primary", size = "md", isLoading, children, ...props },

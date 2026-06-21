@@ -1,0 +1,15 @@
+name: CI Compliance Check
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install and Run Tests
+        run: |
+          npm install --no-audit --no-fund
+          npm test
